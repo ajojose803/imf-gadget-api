@@ -1,0 +1,153 @@
+openapi: 3.0.0
+info:
+  title: "IMF Gadget API"
+  description: "API for managing IMF gadgets"
+  version: "1.0.0"
+servers:
+  - url: "http://localhost:5000/api"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Gadget:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+        name:
+          type: "string"
+        status:
+          type: "string"
+          enum: ["Available", "Deployed", "Destroyed", "Decommissioned"]
+      example:
+        id: "25382db9-89ea-4413-b288-7076fe22ccef"
+        name: "The Nightingale"
+        status: "Available"
+
+    GadgetCreateRequest:
+      type: "object"
+      properties:
+        status:
+          type: "string"
+          enum: ["Available", "Deployed", "Destroyed", "Decommissioned"]
+      example:
+        status: "Available"
+
+    GadgetUpdateRequest:
+      type: "object"
+      properties:
+        status:
+          type: "string"
+          enum: ["Available", "Deployed", "Destroyed", "Decommissioned"]
+      example:
+        status: "Deployed"
+
+paths:
+  /gadgets:
+    get:
+      summary: "Retrieve a list of all gadgets or filter by status"
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: "status"
+          in: "query"
+          description: "Filter gadgets by status"
+          required: false
+          schema:
+            type: "string"
+            enum: ["Available", "Deployed", "Destroyed", "Decommissioned"]
+      responses:
+        "200":
+          description: "List of gadgets"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Gadget"
+        "400":
+          description: "Invalid status value"
+        "401":
+          description: "Unauthorized"
+
+    post:
+      summary: "Add a new gadget"
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GadgetCreateRequest"
+      responses:
+        "201":
+          description: "Gadget successfully created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gadget"
+        "401":
+          description: "Unauthorized"
+
+  /gadgets/{id}:
+    patch:
+      summary: "Update gadget status"
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GadgetUpdateRequest"
+      responses:
+        "200":
+          description: "Gadget updated"
+        "401":
+          description: "Unauthorized"
+
+    delete:
+      summary: "Decommission a gadget"
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Gadget decommissioned"
+        "401":
+          description: "Unauthorized"
+
+  /gadgets/{id}/self-destruct:
+    post:
+      summary: "Trigger self-destruct sequence"
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Self-destruct sequence triggered"
+        "401":
+          description: "Unauthorized"
