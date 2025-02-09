@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, GadgetStatus } from "@prisma/client";
 
 export class GadgetRepository {
   private prisma: PrismaClient;
@@ -11,19 +11,19 @@ export class GadgetRepository {
     return this.prisma.gadget.findMany();
   }
 
-  async getGadgetsByStatus(status: string) {
+  async getGadgetsByStatus(status: GadgetStatus) {
     return this.prisma.gadget.findMany({
       where: { status },
     });
   }
 
-  async createGadget(name: string, status: string) {
+  async createGadget(name: string, status: GadgetStatus) {
     return this.prisma.gadget.create({
       data: { name, status },
     });
   }
 
-  async updateGadget(id: string, data: { name?: string; status?: string }) {
+  async updateGadget(id: string, data: { name?: string; status?: GadgetStatus }) {
     return this.prisma.gadget.update({
       where: { id },
       data,
