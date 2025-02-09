@@ -7,10 +7,12 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ): void => {
-  console.error("Error:", err.stack || err);
+  console.error(`
+  ERROR: ${err.message}
+  Stack: ${process.env.NODE_ENV === "development" ? err.stack : "Hidden"}
+  `);
   
-  res.status(500).json({
-    message: "An unexpected error occurred.",
-    ...(process.env.NODE_ENV !== "production" && { error: err.message }),
+  res.status(err.status || 500).json({
+    message: err.message || "Internal Server Error",
   });
 };

@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import YAML from "yamljs";
 import swaggerUi from "swagger-ui-express";
+import morgan from "morgan";
 import { gadgetRoutes } from "./src/presentation/routes/gadgetRoutes";
 import { errorHandler } from "./src/shared/middleware/errorHandler";
 import { authRoutes } from "./src/presentation/routes/authRoutes";
@@ -13,6 +14,10 @@ const swaggerDocument = YAML.load("./swagger.yaml");
 
 
 app.use(express.json());
+
+if (process.env.NODE_ENV === "production") {
+  app.use(morgan("combined")); 
+}
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
