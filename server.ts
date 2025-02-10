@@ -6,7 +6,6 @@ import morgan from "morgan";
 import { gadgetRoutes } from "./src/presentation/routes/gadgetRoutes";
 import { errorHandler } from "./src/shared/middleware/errorHandler";
 import { authRoutes } from "./src/presentation/routes/authRoutes";
-import { Request, Response, NextFunction } from "express";
 
 dotenv.config();
 
@@ -32,5 +31,5 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`Swagger Docs available at http://localhost:${PORT}/api-docs`);
+  console.log(`Swagger Docs available athttps://imf-gadget-api-cgqs.onrender.com/api-docs/#/`);
 });
