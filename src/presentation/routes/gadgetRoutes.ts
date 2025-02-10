@@ -3,7 +3,7 @@ import { GadgetController } from "../controllers/gadgetController";
 import { GadgetService } from "../../application/services/gadgetService";
 import { GadgetRepository } from "../../domain/repositories/gadgetRepository";
 import { PrismaClient } from "@prisma/client";
-import { authenticateJWT } from "../../shared/middleware/authMiddleware"; // Import authentication middleware
+import { authenticateJWT } from "../../shared/middleware/authMiddleware"; 
 
 const router = Router();
 const prisma = new PrismaClient();

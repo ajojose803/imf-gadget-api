@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { GadgetService } from "../../application/services/gadgetService";
+import {  GadgetStatus } from "@prisma/client";
+
 
 const allowedStatuses = ['Available', 'Deployed', 'Destroyed', 'Decommissioned'];
 
@@ -11,21 +13,19 @@ export class GadgetController {
   }
   
   // GET /api/gadgets
-  
-
 async getGadgets(req: Request, res: Response, next: NextFunction) {
   try {
     const { status } = req.query;
     let gadgets: any[] = [];
 
-    const sanitizedStatus = status ? (status as string).replace(/\/$/, '').trim() : '';
+    const sanitizedStatus = status ? (status as GadgetStatus).replace(/\/$/, '').trim() : '';
 
     if (sanitizedStatus && !allowedStatuses.includes(sanitizedStatus)) {
       return res.status(400).json({ message: `Invalid status value. Allowed values are: ${allowedStatuses.join(', ')}` });
     }
 
     if (sanitizedStatus) {
-      gadgets = await this.gadgetService.getGadgetsByStatus(sanitizedStatus);
+      gadgets = await this.gadgetService.getGadgetsByStatus(sanitizedStatus as GadgetStatus);
     } else {
       gadgets = await this.gadgetService.getAllGadgets();
     }

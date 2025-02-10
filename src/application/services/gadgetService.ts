@@ -1,5 +1,6 @@
 import { GadgetRepository } from "../../domain/repositories/gadgetRepository";
 import { generateUniqueCodename } from "../../shared/utils/codenames";
+import {  GadgetStatus } from "@prisma/client";
 
 
 const VALID_STATUSES = ["Available", "Deployed", "Destroyed", "Decommissioned"];
@@ -14,11 +15,11 @@ export class GadgetService {
   async getAllGadgets() {
     return this.gadgetRepository.getAllGadgets();
   }
-  async getGadgetsByStatus(status: string) {
+  async getGadgetsByStatus(status: GadgetStatus) {
     return this.gadgetRepository.getGadgetsByStatus(status);
   }
 
-  async createGadget(status: string): Promise<any> {
+  async createGadget(status: GadgetStatus): Promise<any> {
    if(!VALID_STATUSES.includes(status)) {
       throw new Error("Invalid status. Status should be Available, Deployed, Destroyed or Decommissioned");
     }
@@ -27,7 +28,7 @@ export class GadgetService {
     return this.gadgetRepository.createGadget(codename, status);
   }
 
-  async updateGadget(id: string, data: { name?: string; status?: string }) {
+  async updateGadget(id: string, data: { name?: string; status?: GadgetStatus}) {
     const { status } = data;
 
     if(status && !VALID_STATUSES.includes(status)) {

@@ -6,6 +6,7 @@ import morgan from "morgan";
 import { gadgetRoutes } from "./src/presentation/routes/gadgetRoutes";
 import { errorHandler } from "./src/shared/middleware/errorHandler";
 import { authRoutes } from "./src/presentation/routes/authRoutes";
+import { Request, Response, NextFunction } from "express";
 
 dotenv.config();
 
